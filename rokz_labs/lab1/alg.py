@@ -11,14 +11,6 @@ X_new = np.where(X_new>0, 1, X_new)
 
 class EMalg:
     """
-    >>> import numpy as np
-    >>> from keras.datasets import mnist
-    >>> (train_X, train_y), (test_X, test_y) = mnist.load_data()
-    ...
-    >>> X = train_X[(train_y==0)|(train_y==1)]
-    >>> y = train_y[(train_y==0)|(train_y==1)]
-    >>> X_new = np.where(X<50, 0, X) 
-    >>> X_new = np.where(X_new>0, 1, X_new) 
     >>> E = EMalg(np.asarray(X_new[:4]), 2)
     >>> E.pkx = np.array([[0.25, 0.75], [0.73, 0.27], [0.4, 0.6], [0.33, 0.67]])
     >>> E.pk_new(0)
