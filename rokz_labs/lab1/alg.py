@@ -1,4 +1,13 @@
 import numpy as np
+from keras.datasets import mnist
+
+(train_X, train_y), (test_X, test_y) = mnist.load_data()
+
+X = train_X[(train_y==0)|(train_y==1)]
+y = train_y[(train_y==0)|(train_y==1)]
+X_new = np.where(X<50, 0, X) 
+X_new = np.where(X_new>0, 1, X_new) 
+
 
 class EMalg:
     """
