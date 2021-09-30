@@ -34,4 +34,4 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Run doctest
         run: |
-          python -m doctest -v lab1/alg.py
+          python -m doctest -v rokz_labs/lab1/alg.py
