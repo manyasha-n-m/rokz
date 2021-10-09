@@ -1,8 +1,22 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+import json
+
+d1 = json.load(open('train_01.json'))
+d = []
+r = {'inside':1, 'outside':-1}
+for k in d1.keys():
+    _df = pd.DataFrame(d1[k], columns=['A', 'B'])
+    _df['class'] = r[k]
+    d.append(_df)
+df1 = pd.concat(d, axis=0, ignore_index=True)
 
 def plot(df):
+    """
+    >>> plot(d[0])
+    Only one class was detected
+    """
     plt.figure(figsize=(7,7))
     font = {'weight' : 'bold', 'size'   : 15}
     plt.rc('font', **font)
@@ -18,6 +32,14 @@ def plot(df):
     plt.legend(['inside', 'outside'])
 
 class Classifier:
+    """
+    >>> C = Classifier(df1)
+    >>> C.check()
+    (False, 0)
+    >>> C.fix(C.X.iloc[0,:], C.y[0])
+    >>> np.asarray(C.w)[0]
+    0.4275968563344624
+    """
     def __init__(self, train):
         self.df = train
         self.X = self.df[['A', 'B']]
@@ -27,8 +49,6 @@ class Classifier:
         self.X['C'] = 1
         self.y = train['class']
         self.w = np.zeros(6)
-        self.classify()
-        self.plot(train)
     
     def fix(self, X, y):
         self.w += y*X/np.linalg.norm(X)
@@ -47,6 +67,10 @@ class Classifier:
             self.fix(self.X.loc[idx,:], self.y[idx])
             flag, idx = self.check()
         print(self.w)
+    
+    def train(self):
+        self.classify()
+        self.plot(self.df)
         
     def test(self, df):
         test = df[['A', 'B']]
