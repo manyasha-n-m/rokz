@@ -8,6 +8,7 @@ on:
   push:
     paths:
     - 'rokz_labs/lab2/**'
+    - '.github/workflows/lab2.yml'
     branches: [main]
   pull_request:
     branches: [ main ]
