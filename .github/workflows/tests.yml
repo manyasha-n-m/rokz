@@ -6,9 +6,9 @@ name: Testing lab1
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
-      paths:
-          - 'rokz_labs/lab1/**'
-    branches: [ main ]
+    paths:
+    - 'rokz_labs/lab1/**'
+    branches: [main]
   pull_request:
     branches: [ main ]
 
