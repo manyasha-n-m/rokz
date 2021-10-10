@@ -4,7 +4,7 @@ import pandas as pd
 import json
 
 def init():
-    with open('train_01.json') as f:
+    with open('lab2/train_01.json') as f:
         d1 = json.load(f)
     d = []
     r = {'inside':1, 'outside':-1}
@@ -15,9 +15,12 @@ def init():
     df1 = pd.concat(d, axis=0, ignore_index=True)
     return df1, d
 
+"""
+>>> df1, d = init()
+"""
+
 def plot(df):
     """
-    >>> df1, d = init()
     >>> plot(d[0])
     Only one class was detected
     """
