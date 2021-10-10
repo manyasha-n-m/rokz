@@ -44,7 +44,7 @@ class Classifier:
     (False, 0)
     >>> C.fix(C.X.iloc[0,:], C.y[0])
     >>> np.asarray(C.w)[0]
-    0.4275968563344624
+    -0.37630135187901764
     """
     def __init__(self, train):
         self.df = train
