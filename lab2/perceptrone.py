@@ -15,11 +15,9 @@ def init():
     df1 = pd.concat(d, axis=0, ignore_index=True)
     return df1, d
 
-"""
->>> df1, d = init()
-"""
 def plot(df):
     """
+    >>> df1, d = init()
     >>> plot(d[0])
     Only one class was detected
     """
@@ -39,6 +37,7 @@ def plot(df):
 
 class Classifier:
     """
+    >>> df1, d = init()
     >>> C = Classifier(df1)
     >>> C.check()
     (False, 0)
