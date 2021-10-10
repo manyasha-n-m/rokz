@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import json
 
-d1 = json.load(open('rokz_labs/lab2/train_01.json'))
+d1 = json.load(open('lab2/train_01.json'))
 d = []
 r = {'inside':1, 'outside':-1}
 for k in d1.keys():
