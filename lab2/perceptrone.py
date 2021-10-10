@@ -3,15 +3,21 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import json
 
-d1 = json.load(open('lab2/train_01.json'))
-d = []
-r = {'inside':1, 'outside':-1}
-for k in d1.keys():
-    _df = pd.DataFrame(d1[k], columns=['A', 'B'])
-    _df['class'] = r[k]
-    d.append(_df)
-df1 = pd.concat(d, axis=0, ignore_index=True)
+def init():
+    with open('train_01.json') as f:
+        d1 = json.load(f)
+    d = []
+    r = {'inside':1, 'outside':-1}
+    for k in d1.keys():
+        _df = pd.DataFrame(d1[k], columns=['A', 'B'])
+        _df['class'] = r[k]
+        d.append(_df)
+    df1 = pd.concat(d, axis=0, ignore_index=True)
+    return df1, d
 
+"""
+>>> df1, d = init()
+"""
 def plot(df):
     """
     >>> plot(d[0])
