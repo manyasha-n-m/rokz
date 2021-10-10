@@ -15,12 +15,9 @@ def init():
     df1 = pd.concat(d, axis=0, ignore_index=True)
     return df1, d
 
-"""
->>> df1, d = init()
-"""
-
 def plot(df):
     """
+    >>> df1, d = init()
     >>> plot(d[0])
     Only one class was detected
     """
@@ -37,6 +34,7 @@ def plot(df):
     plt.xlabel('A')
     plt.ylabel('B')
     plt.legend(['inside', 'outside'])
+    
 
 class Classifier:
     """
