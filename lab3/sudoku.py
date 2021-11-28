@@ -27,7 +27,7 @@ class sudoku:
     '''
     def __init__(self, dim: int, base):
         self.dim = dim
-        self.base = copy.deepcopy(base)
+        self.base = np.array(base)
         self.tau, self.g = sudoku.create_tau(dim) 
         self.q = sudoku.create_q(dim, self.base)
         
@@ -105,17 +105,15 @@ class sudoku:
                 return same, np.array([]), False
             elif amount == 1:
                 i,j = t
-                if base[int(i)][int(j)] == 0:
-                    base[int(i)][int(j)] = list(q[t]).index(True)+1
-                    print(np.asarray(base), t, list(q[t]).index(True)+1)
+                if base[int(i), int(j)] == 0:
+                    base[int(i), int(j)] = list(q[t]).index(True)+1
+                    print(base, t, list(q[t]).index(True)+1)
             else: 
                 max_amounts.append([t, amount])
         return same, np.array(max_amounts), True
     
     @staticmethod
     def solve_case(base, g, q):
-        g1 = copy.deepcopy(g)
-        q1 = copy.deepcopy(q)
         solvable = True
         while solvable:
             same_g = sudoku.cut_g(g, q)
@@ -132,16 +130,18 @@ class sudoku:
                     return solvable, amounts, True
     
     def solve_sudoku(self):
-        solvable, amounts, solved = self.solve_case(self.base, self.g, self.q)        
+        solvable, amounts, solved = self.solve_case(self.base, self.g, self.q)
+        poly = True
         while solvable:
             if solved:
-                return solved, self.base
+                return solved, self.base, poly
             else:
                 # we need to fix state in a node
                 t, k = amounts[np.argsort(amounts[:,1])][0]
                 pos1, pos2 = t
                 available = np.arange(self.dim**2)[np.where(self.q[t])]
                 for state in available:
+                    poly = False
                     print(f'Fixing state {state+1} in position {t}')
                     g0 = copy.deepcopy(self.g)
                     q0 = copy.deepcopy(self.q)
@@ -149,13 +149,14 @@ class sudoku:
                     
                     q0[t] = np.zeros(self.dim**2, dtype=bool)
                     q0[t][state] = True
-                    base0[int(pos1)][int(pos2)] = state+1
-                    print(np.asarray(base0), t, state+1)
+                    base0[int(pos1), int(pos2)] = state+1
+                    print(base0, t, state+1)
                     solvable1, amounts1, solved1 = self.solve_case(base0, g0, q0)
                     if not solvable1:
                         continue
                     else:
-                        print('solvable')
+                        print('solvable case')
+                        poly = True
                         break
                 solvable = solvable1
                 self.base = base0
@@ -163,12 +164,14 @@ class sudoku:
                 self.q = q0
                 amounts = amounts1
                 solved = solved1
-        return solved, self.base
+        return solved, self.base, poly
     
     def solve(self):
-        solved, base = self.solve_sudoku()
+        solved, base, poly = self.solve_sudoku()
         if not solved:
             print("No solution found")
+            if not poly:
+                print('No semilattice polymorphism either')
         else:
             print('Found solution')
             return base
