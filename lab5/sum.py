@@ -3,9 +3,9 @@ import cv2
 
 im_path = 'data\\image_0{}.png'
 mask_path = 'data\\mask_0{}.png'
-# if not __name__ == "__main__":
-#     im_path = 'lab5/data/image_0{}.png'
-#     mask_path = 'lab5/data/mask_0{}.png'
+if not __name__ == "__main__":
+    im_path = 'lab5/data/image_0{}.png'
+    mask_path = 'lab5/data/mask_0{}.png'
 
 
 def read(im, mask):
@@ -75,9 +75,9 @@ class Union:
         return np.take_along_axis(self.g[:, :, :,j], K[None, None, :], axis=0)[0]
 
 im, m = read(im_path, mask_path)
-u = Union(im, m)
+u = Union(im, m, 255)
 res = u.merge()
-cv2.imwrite('3.png', res)
+cv2.imwrite('2.png', res)
 
 
 if __name__ == "__main__":
