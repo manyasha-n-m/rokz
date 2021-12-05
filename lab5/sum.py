@@ -1,11 +1,11 @@
 import numpy as np
 import cv2
 
-im = 'data\\image_0{}.png'
-mask = 'data\\mask_0{}.png'
+im_path = 'data\\image_0{}.png'
+mask_path = 'data\\mask_0{}.png'
 if not __name__ == "__main__":
-    im = 'lab5/data/image_0{}.png'
-    mask = 'lab5/data/mask_0{}.png'
+    im_path = 'lab5/data/image_0{}.png'
+    mask_path = 'lab5/data/mask_0{}.png'
 
 
 def read(im, mask):
@@ -18,8 +18,8 @@ def read(im, mask):
 
 
 class Union:
-    '''
-    >>> images, masks = read(im, mask)
+    """
+    >>> images, masks = read(im_path, mask_path)
     >>> u = Union(images, masks)
     >>> q = u.q[:,:,-1]; q.shape
     (5, 1000)
@@ -27,8 +27,7 @@ class Union:
     (5, 5, 1000)
     >>> f0 = np.min(q+g, axis=1); f0.shape
     (5, 1000)
-    '''
-
+    """
     def __init__(self, pics, masks, alpha=1, beta=1):
         self.x = np.array(pics)
         self.m = self.x.shape[0]
@@ -48,6 +47,9 @@ class Union:
                             np.abs(self.x[i, :, :, 2]-self.x[j, :, :, 2])
                 g[i, j, :, :] = g[j, i, :, :] = _norm_kk_[:, :-1] + _norm_kk_[:, 1:]
         return g
+
+    def calc_f(self):
+        pass
 
 
 if __name__ == "__main__":
