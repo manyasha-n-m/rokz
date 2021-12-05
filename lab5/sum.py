@@ -33,7 +33,7 @@ class Union:
     >>> a = np.array([[1,1], [2,3], [4,2]]); np.argmin(a, axis=1).astype(int)
     array([0, 0, 1])
     """
-    def __init__(self, pics, masks, alpha=1, beta=1):
+    def __init__(self, pics, masks, alpha=1., beta=1.):
         self.x = np.array(pics)
         self.m = self.x.shape[0]
         self.b = np.array(masks, dtype=bool)
@@ -43,29 +43,28 @@ class Union:
         self.g = self.create_g()
 
     def create_g(self):
-        g = np.zeros((self.m, self.m, self.h, self.w-1))
+        g = np.zeros((self.m, self.m, self.h, self.w))
         for i in range(self.m-1):
             for j in range(i+1, self.m):
                 _norm_kk_ = np.abs(self.x[i, :, :, 0]-self.x[j, :, :, 0]) + \
                             np.abs(self.x[i, :, :, 1]-self.x[j, :, :, 1]) + \
                             np.abs(self.x[i, :, :, 2]-self.x[j, :, :, 2])
-                g[i, j, :, :] = g[j, i, :, :] = self.beta*(_norm_kk_[:, :-1] + _norm_kk_[:, 1:])
+                g[i, j, :, 1:] = g[j, i, :, 1:] = self.beta*(_norm_kk_[:, :-1] + _norm_kk_[:, 1:])
         return g
 
     def calc_f(self):
         w = self.w
-        f = np.zeros((w+1, self.m, self.h))
+        f = np.zeros((w, self.m, self.h))
         for j in range(w-1, 0, -1):
-            f[j, :, :] = np.min(self.q[:, :, j] + f[j+1, :, :] + self.g[:, :, :, j-1], axis=1)
-        f[0, :, :] = self.q[:, :, 0] + f[1, :, :]
+            f[j-1, :, :] = np.min(self.q[:, :, j] + f[j, :, :] + self.g[:, :, :, j], axis=1)
         return f
 
     def optimal(self):
         f = self.calc_f()
         K = np.zeros((self.w, self.h), dtype=int)
-        K[0, :] = np.argmin(f[0, :, :], axis=0)
+        K[0, :] = np.argmin(self.q[:, :, 0] + f[0, :, :], axis=0)
         for j in range(1, self.w):
-            _table = self.q[:, :, j] + self.g_optimal(K[j-1, :], j-1) + f[j+1, :, :]
+            _table = self.q[:, :, j] + self.g_optimal(K[j-1, :], j) + f[j, :, :]
             K[j, :] = np.argmin(_table, axis=0)
         return K
 
@@ -78,9 +77,9 @@ class Union:
 
 
 im, m = read(im_path, mask_path)
-u = Union(im, m, 255*6)
+u = Union(im, m, 255*8)
 res = u.merge()
-cv2.imwrite('12.png', res)
+cv2.imwrite('18.png', res)
 print(time.time()-st)
 
 if __name__ == "__main__":
