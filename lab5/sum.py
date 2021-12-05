@@ -3,9 +3,9 @@ import cv2
 
 im_path = 'data\\image_0{}.png'
 mask_path = 'data\\mask_0{}.png'
-if not __name__ == "__main__":
-    im_path = 'lab5/data/image_0{}.png'
-    mask_path = 'lab5/data/mask_0{}.png'
+# if not __name__ == "__main__":
+#     im_path = 'lab5/data/image_0{}.png'
+#     mask_path = 'lab5/data/mask_0{}.png'
 
 
 def read(im, mask):
@@ -36,9 +36,8 @@ class Union:
         self.m = self.x.shape[0]
         self.b = np.array(masks, dtype=bool)
         self.h, self.w = self.b[0].shape
-        self.P = np.zeros((self.h, self.w))
         self.alpha, self.beta = alpha, beta
-        self.q = alpha*(~self.b)
+        self.q = self.alpha*(~self.b)
         self.g = self.create_g()
 
     def create_g(self):
@@ -48,16 +47,16 @@ class Union:
                 _norm_kk_ = np.abs(self.x[i, :, :, 0]-self.x[j, :, :, 0]) + \
                             np.abs(self.x[i, :, :, 1]-self.x[j, :, :, 1]) + \
                             np.abs(self.x[i, :, :, 2]-self.x[j, :, :, 2])
-                g[i, j, :, :] = g[j, i, :, :] = _norm_kk_[:, :-1] + _norm_kk_[:, 1:]
+                g[i, j, :, :] = g[j, i, :, :] = self.beta*(_norm_kk_[:, :-1] + _norm_kk_[:, 1:])
         return g
 
     def calc_f(self):
         w = self.w
         f = np.zeros((w+1, self.m, self.h))
         for j in range(w-1, 0, -1):
-            f[j, :, :] = np.min(self.q[:, :, j] + self.g[:, :, :, j-1] + f[j+1, :, :], axis=1)
+            f[j, :, :] = np.min(self.q[:, :, j] + f[j+1, :, :] + self.g[:, :, :, j-1], axis=1)
         f[0, :, :] = self.q[:, :, 0] + f[1, :, :]
-        return f[:, :, :]
+        return f
 
     def optimal(self):
         f = self.calc_f()
@@ -70,16 +69,15 @@ class Union:
 
     def merge(self):
         K = self.optimal()
-        return np.take_along_axis(self.x, K[None, :, :, None], axis=0)[0]
+        return np.take_along_axis(self.x, K.T[None, :, :, None], axis=0)[0]
 
     def g_optimal(self, K, j):
         return np.take_along_axis(self.g[:, :, :,j], K[None, None, :], axis=0)[0]
 
 im, m = read(im_path, mask_path)
-u = Union(im, m, 255*1.5)
-f = u.calc_f()
+u = Union(im, m)
 res = u.merge()
-cv2.imwrite('1.png', res)
+cv2.imwrite('3.png', res)
 
 
 if __name__ == "__main__":
