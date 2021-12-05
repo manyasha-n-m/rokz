@@ -1,5 +1,7 @@
 *.pdf
 *.png
+*.jpg
+*.zip
 *.ipynb_checkpoints
 *__pycache__
 *.idea

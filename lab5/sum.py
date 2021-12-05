@@ -1,8 +1,10 @@
+import time
+st = time.time()
 import numpy as np
 import cv2
 
-im_path = 'data\\image_0{}.png'
-mask_path = 'data\\mask_0{}.png'
+im_path = 'data1\\0{}.jpg'
+mask_path = 'data1\\m_0{}.png'
 if not __name__ == "__main__":
     im_path = 'lab5/data/image_0{}.png'
     mask_path = 'lab5/data/mask_0{}.png'
@@ -60,7 +62,7 @@ class Union:
 
     def optimal(self):
         f = self.calc_f()
-        K = np.zeros((self.h, self.w), dtype=int)
+        K = np.zeros((self.w, self.h), dtype=int)
         K[0, :] = np.argmin(f[0, :, :], axis=0)
         for j in range(1, self.w):
             _table = self.q[:, :, j] + self.g_optimal(K[j-1,:], j-1) + f[j, :, :]
@@ -76,10 +78,10 @@ class Union:
 
 
 im, m = read(im_path, mask_path)
-u = Union(im, m, 255)
+u = Union(im, m, 255*6)
 res = u.merge()
-cv2.imwrite('2.png', res)
-
+cv2.imwrite('8.png', res)
+print(time.time()-st)
 
 if __name__ == "__main__":
     import doctest
