@@ -4,8 +4,8 @@ import cv2
 im = 'data\\image_0{}.png'
 mask = 'data\\mask_0{}.png'
 if not __name__ == "__main__":
-    im = 'lab5\\' + im
-    mask = 'lab5\\' + mask
+    im = 'lab5/data/image_0{}.png'
+    mask = 'lab5/data/mask_0{}.png'
 
 
 def read(im, mask):
