@@ -25,8 +25,11 @@ class Union:
     (5, 1000)
     >>> g = u.g[:,:,:,-1]; g.shape
     (5, 5, 1000)
-    >>> f0 = np.min(q+g, axis=1); f0.shape
+    >>> flast = np.min(q+g, axis=1); flast.shape
     (5, 1000)
+    >>> f = u.calc_f()
+    >>> a = np.array([[1,1], [2,3], [4,2]]); np.argmin(a, axis=1).astype(int)
+    array([0, 0, 1])
     """
     def __init__(self, pics, masks, alpha=1, beta=1):
         self.x = np.array(pics)
@@ -49,7 +52,34 @@ class Union:
         return g
 
     def calc_f(self):
-        pass
+        w = self.w
+        f = np.zeros((w+1, self.m, self.h))
+        for j in range(w-1, 0, -1):
+            f[j, :, :] = np.min(self.q[:, :, j] + self.g[:, :, :, j-1] + f[j+1, :, :], axis=1)
+        f[0, :, :] = self.q[:, :, 0] + f[1, :, :]
+        return f[:, :, :]
+
+    def optimal(self):
+        f = self.calc_f()
+        K = np.zeros((self.h, self.w), dtype=int)
+        K[0, :] = np.argmin(f[0, :, :], axis=0)
+        for j in range(1, self.w):
+            _table = self.q[:, :, j] + self.g_optimal(K[j-1,:], j-1) + f[j, :, :]
+            K[j, :] = np.argmin(_table, axis=0)
+        return K
+
+    def merge(self):
+        K = self.optimal()
+        return np.take_along_axis(self.x, K[None, :, :, None], axis=0)[0]
+
+    def g_optimal(self, K, j):
+        return np.take_along_axis(self.g[:, :, :,j], K[None, None, :], axis=0)[0]
+
+im, m = read(im_path, mask_path)
+u = Union(im, m, 255*1.5)
+f = u.calc_f()
+res = u.merge()
+cv2.imwrite('1.png', res)
 
 
 if __name__ == "__main__":
