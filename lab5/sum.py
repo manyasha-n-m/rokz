@@ -74,6 +74,7 @@ class Union:
     def g_optimal(self, K, j):
         return np.take_along_axis(self.g[:, :, :,j], K[None, None, :], axis=0)[0]
 
+
 im, m = read(im_path, mask_path)
 u = Union(im, m, 255)
 res = u.merge()
