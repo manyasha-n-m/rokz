@@ -79,9 +79,9 @@ class Union:
 
 
 im, m = read(im_path, mask_path)
-u = Union(im, m, 255*6)
+u = Union(im, m, 255)
 res = u.merge()
-cv2.imwrite('18.png', res)
+cv2.imwrite('24.png', res)
 print(time.time()-st)
 
 if __name__ == "__main__":
