@@ -42,13 +42,15 @@ class Union:
         self.q = self.alpha*(~self.b)
         self.g = self.create_g()
 
+    def norm(self, i, j):
+        norm = np.sum(np.abs(self.x[i, :, :, :]-self.x[j, :, :, :]), axis=2)
+        return norm
+
     def create_g(self):
         g = np.zeros((self.m, self.m, self.h, self.w))
         for i in range(self.m-1):
             for j in range(i+1, self.m):
-                _norm_kk_ = np.abs(self.x[i, :, :, 0]-self.x[j, :, :, 0]) + \
-                            np.abs(self.x[i, :, :, 1]-self.x[j, :, :, 1]) + \
-                            np.abs(self.x[i, :, :, 2]-self.x[j, :, :, 2])
+                _norm_kk_ = self.norm(i, j)
                 g[i, j, :, 1:] = g[j, i, :, 1:] = self.beta*(_norm_kk_[:, :-1] + _norm_kk_[:, 1:])
         return g
 
@@ -77,7 +79,7 @@ class Union:
 
 
 im, m = read(im_path, mask_path)
-u = Union(im, m, 255*8)
+u = Union(im, m, 255*6)
 res = u.merge()
 cv2.imwrite('18.png', res)
 print(time.time()-st)
