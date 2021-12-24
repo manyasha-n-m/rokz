@@ -15,8 +15,8 @@ def e_row(base, idx_row):
 
 
 def main():
-    p0 = glob('*e0.png', recursive=True)[0]
-    p1 = glob('*e1.png', recursive=True)[0]
+    p0 = glob('**/e0.png', recursive=True)[0]
+    p1 = glob('**/e1.png', recursive=True)[0]
     e = np.array([cv2.imread(p0, cv2.IMREAD_GRAYSCALE), cv2.imread(p1, cv2.IMREAD_GRAYSCALE)])
     for i in range(20, 100, 10):
         _im = np.zeros((30, i), dtype=int)
@@ -34,6 +34,7 @@ def main():
         im[j:j+10, :] = e_row(e, idx_[int(j/10),:])
     cv2.imwrite('samples/sample_0.png', im)
 
+main()
 
 if __name__ == '__main__':
     import doctest
