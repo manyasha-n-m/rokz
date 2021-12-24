@@ -1,8 +1,6 @@
 import numpy as np
 import cv2
 
-e = np.array([cv2.imread('0.png', cv2.IMREAD_GRAYSCALE), cv2.imread('1.png', cv2.IMREAD_GRAYSCALE)])
-
 
 def e_row(base, idx_row):
     """
@@ -15,21 +13,26 @@ def e_row(base, idx_row):
     return np.concatenate(base[idx_row], axis=1)
 
 
-for i in range(20, 100, 10):
-    _im = np.zeros((30, i), dtype=int)
-    _base = np.random.randint(0, 2, (3, int(i/10)))
-    for j in range(0, 30, 10):
-        _im[j:j+10, :] = e_row(e,_base[int(j/10), :])
-    cv2.imwrite(f'samples/sample_{i}.png', _im, )
+def main():
+    e = np.array([cv2.imread('e0.png', cv2.IMREAD_GRAYSCALE), cv2.imread('e1.png', cv2.IMREAD_GRAYSCALE)])
+    for i in range(20, 100, 10):
+        _im = np.zeros((30, i), dtype=int)
+        _base = np.random.randint(0, 2, (3, int(i/10)))
+        for j in range(0, 30, 10):
+            _im[j:j+10, :] = e_row(e,_base[int(j/10), :])
+        cv2.imwrite(f'samples/sample_{i}.png', _im, )
 
-# real sample
-im = np.zeros((30, 40), dtype=int)
-idx_ = np.array([[1, 0, 1, 1],
-                [1, 0, 0, 1],
-                [0, 1, 0, 0]])
-for j in range(0, 30, 10):
-    im[j:j+10, :] = e_row(e, idx_[int(j/10),:])
-cv2.imwrite('samples/sample_0.png', im)
+    # real sample
+    im = np.zeros((30, 40), dtype=int)
+    idx_ = np.array([[1, 0, 1, 1],
+                    [1, 0, 0, 1],
+                    [0, 1, 0, 0]])
+    for j in range(0, 30, 10):
+        im[j:j+10, :] = e_row(e, idx_[int(j/10),:])
+    cv2.imwrite('samples/sample_0.png', im)
+
+
+main()
 
 if __name__ == '__main__':
     import doctest
