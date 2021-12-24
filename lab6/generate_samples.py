@@ -20,15 +20,15 @@ for i in range(20, 100, 10):
     _base = np.random.randint(0, 2, (3, int(i/10)))
     for j in range(0, 30, 10):
         _im[j:j+10, :] = e_row(e,_base[int(j/10), :])
-    cv2.imwrite(f'samples/sample_{i+1}.png', _im, )
+    cv2.imwrite(f'samples/sample_{i}.png', _im, )
 
 # real sample
 im = np.zeros((30, 40), dtype=int)
-idx = np.array([[1, 0, 1, 1],
+idx_ = np.array([[1, 0, 1, 1],
                 [1, 0, 0, 1],
                 [0, 1, 0, 0]])
 for j in range(0, 30, 10):
-    im[j:j+10, :] = e_row(e, idx[int(j/10),:])
+    im[j:j+10, :] = e_row(e, idx_[int(j/10),:])
 cv2.imwrite('samples/sample_0.png', im)
 
 if __name__ == '__main__':
