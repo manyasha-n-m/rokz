@@ -2,6 +2,7 @@ import numpy as np
 import cv2
 from glob import glob
 
+
 def e_row(base, idx_row):
     """
     >>> a = np.array([[0,1], [1,2]]); b = np.array([[3,4], [5,6]])
@@ -33,8 +34,6 @@ def main():
         im[j:j+10, :] = e_row(e, idx_[int(j/10),:])
     cv2.imwrite('samples/sample_0.png', im)
 
-
-main()
 
 if __name__ == '__main__':
     import doctest
