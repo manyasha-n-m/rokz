@@ -2,9 +2,9 @@ import numpy as np
 import cv2
 from glob import glob
 
-img_ = cv2.imread(glob("**/sample_0.png", recursive=True)[0], cv2.IMREAD_GRAYSCALE)
-e0_ = cv2.imread(glob("**/e0.png", recursive=True)[0], cv2.IMREAD_GRAYSCALE)
-e1_ = cv2.imread(glob("**/e1.png", recursive=True)[0], cv2.IMREAD_GRAYSCALE)
+img_ = "**/sample_0.png"
+e0_ = "**/e0.png"
+e1_ = "**/e1.png"
 
 
 class BinSum:
@@ -19,19 +19,24 @@ class BinSum:
     >>> (s.block(0, 0, 0, 0)==s.e1).all()
     True
     """
-    def __init__(self, img, e0, e1):
-        self.img = img
-        self.e0 = e0
-        self.e1 = e1
-        self.h, self.w = e0.shape
-        self.cols = int(len(img[0, :])/self.w)
+    def __init__(self, img_path, e0_path, e1_path):
+        self.img = cv2.imread(glob(img_path, recursive=True)[0], cv2.IMREAD_GRAYSCALE)
+        self.e0 = cv2.imread(glob(e0_path, recursive=True)[0], cv2.IMREAD_GRAYSCALE)
+        self.e1 = cv2.imread(glob(e1_path, recursive=True)[0], cv2.IMREAD_GRAYSCALE)
+        self.h, self.w = self.e0.shape
+        self.cols = int(len(self.img[0, :])/self.w)
         self.T =[0, 1]
         self.N = self.__create_n()
-        self.__q = {0: e0, 1: e1}
+        self.__q = {0: self.e0, 1: self.e1}
         self.__gh = self.__create_gh()
         self.__gv = self.__create_gv()
         self.__g = self.__create_g()
         self.f = self.calc_f0()
+
+    def img_show(self):
+        import matplotlib.pyplot as plt
+        plt.imshow(self.img)
+        return plt.show()
 
     def q(self, t, x):
         if x.shape == (self.h, self.w):
@@ -99,7 +104,7 @@ class BinSum:
                         for t in self.T:
                             f[i, i_, j, j_, t] = self.q(t, self.block(i, i_, j, j_))
                         for n in self.N:
-                            f[i, i_, j_, j_, n] = False
+                            f[i, i_, j, j_, n] = False
         return f
 
     def horizontal(self, i, i_, j, j_, n):
