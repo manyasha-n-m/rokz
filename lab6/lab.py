@@ -6,25 +6,37 @@ img_ = cv2.imread(glob("**/sample_0.png", recursive=True)[0], cv2.IMREAD_GRAYSCA
 e0_ = cv2.imread(glob("**/e0.png", recursive=True)[0], cv2.IMREAD_GRAYSCALE)
 e1_ = cv2.imread(glob("**/e1.png", recursive=True)[0], cv2.IMREAD_GRAYSCALE)
 
+
 class BinSum:
     """
     >>> s = BinSum(img_, e0_, e1_)
     >>> s.gh('i','v0', 'i')
     True
-    >>> s.gh('i','v0', 'i_')
+    >>> s.gv('d0','d1', 'A00')
     False
+    >>> s.g(1, 'r1')
+    True
+    >>> (s.block(0, 0, 0, 0)==s.e1).all()
+    True
     """
     def __init__(self, img, e0, e1):
         self.img = img
         self.e0 = e0
         self.e1 = e1
         self.h, self.w = e0.shape
+        self.cols = int(len(img[0, :])/self.w)
         self.T =[0, 1]
         self.N = self.__create_n()
-        self.q = {0: e0, 1: e1}
+        self.__q = {0: e0, 1: e1}
         self.__gh = self.__create_gh()
         self.__gv = self.__create_gv()
         self.__g = self.__create_g()
+        self.f = self.calc_f0()
+
+    def q(self, t, x):
+        if x.shape == (self.h, self.w):
+            return (x == self.__q[t]).all()
+        return False
 
     @staticmethod
     def __create_n():
@@ -71,4 +83,66 @@ class BinSum:
     def g(self, t, n):
         return (t, n) in self.__g.keys()
 
+    def block(self, i, i_, j, j_) -> np.ndarray:
+        st_i = i * self.h
+        end_i = (i_ + 1)*self.h
+        st_j = j * self.w
+        end_j = (j_ + 1)*self.w
+        return self.img[st_i:end_i, st_j: end_j]
 
+    def calc_f0(self):
+        f = dict()
+        for i in range(3):
+            for j in range(self.cols):
+                for i_ in range(i_, 3):
+                    for j_ in range(j, self.cols):
+                        for t in self.T:
+                            f[i, i_, j, j_, t] = self.q(t, self.block(i, i_, j, j_))
+                        for n in self.N:
+                            f[i, i_, j_, j_, n] = False
+        return f
+
+    def horizontal(self, i, i_, j, j_, n):
+        if j_ == j:
+            return False
+        res = []
+        for j__ in range(j, j_):
+            for nl in self.N:
+                for nr in self.N:
+                    res.append(all([
+                        self.f[i, i_, j, j__, nl],
+                        self.gh(nl, nr, n),
+                        self.f[i, i_, j__+1, j_, nr]]))
+        return any(res)
+
+    def vertical(self, i, i_, j, j_, n):
+        if i_ == i:
+            return False
+        res = []
+        for i__ in range(i, i_):
+            for nu in self.N:
+                for nd in self.N:
+                    res.append(all([
+                        self.f[i, i__, j, j_, nu],
+                        self.gv(nu, nd, n),
+                        self.f[i__+1, i_, j, j_, nd]]))
+        return any(res)
+
+    def rename(self, i, i_, j, j_, n):
+        res = []
+        for t in self.T:
+            res.append(self.f[i, i_, j, j_, t] and self.g(t, n))
+        return any(res)
+
+    def iterate(self, S:int):
+        pass
+
+    def check(self):
+        pass
+
+
+
+
+
+s = BinSum(img_, e0_, e1_)
+print(s.block(0, 2, 0, 0))
