@@ -134,15 +134,38 @@ class BinSum:
             res.append(self.f[i, i_, j, j_, t] and self.g(t, n))
         return any(res)
 
-    def iterate(self, S:int):
-        pass
+    def iter_S1(self):
+        for i in range(2):
+            for j in range(self.cols):
+                for n in self.N:
+                    self.f[i, i, j, j, n] = self.f[i, i, j, j, n] or self.rename(i, i, j, j, n)
+
+    def iter_S2(self):
+        i, i_ = 0, 1
+        for j in range(self.cols):
+            for n in self.N:
+                self.f[i, i_, j, j, n] = any([
+                    self.f[i, i_, j, j, n],
+                    self.vertical(i, i_, j, j, n),
+                    self.rename(i, i_, j, j, n)
+                ])
+
+    def iterate(self, idx):
+        i, i_ = 0, 2
+        for j in range(self.cols + 1 - idx):
+            j_ = idx +j - 1
+            for n in self.N:
+                self.f[i, i_, j, j_, n] = any([
+                    self.f[i, i_, j, j_, n],
+                    self.vertical(i, i_, j, j_, n),
+                    self.horizontal(i, i_, j, j_, n),
+                    self.rename(i, i_, j, j_, n)
+                ])
 
     def check(self):
-        pass
+        self.iter_S1()
+        self.iter_S2()
+        for idx in range(1, self.cols+1):
+            self.iterate(idx)
+        return self.f
 
-
-
-
-
-s = BinSum(img_, e0_, e1_)
-print(s.block(0, 2, 0, 0))
