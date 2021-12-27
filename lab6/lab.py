@@ -20,12 +20,14 @@ class BinSum:
         self.e1 = e1
         self.h, self.w = e0.shape
         self.T =[0, 1]
+        self.N = self.__create_n()
         self.q = {0: e0, 1: e1}
         self.__gh = self.__create_gh()
         self.__gv = self.__create_gv()
         self.__g = self.__create_g()
 
-    def __create_n(self):
+    @staticmethod
+    def __create_n():
         N = ['i', 'i_', '']
         for i in range(2):
             N.extend([f'v{i}', f'v{i}_', f'r{i}', f'd{i}'])
