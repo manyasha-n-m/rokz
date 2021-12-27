@@ -48,13 +48,27 @@ class BinSum:
     @staticmethod
     def __create_gv():
         gv = dict()
-
+        gv['A00', 'r0', 'v0'] = gv['A01', 'r1', 'v0'] = gv['A10', 'r1', 'v0'] = True
+        gv['A11', 'r0', 'v0_'] = True
+        gv['A00', 'r1', 'v1'] = True
+        gv['A01', 'r0', 'v1_'] = gv['A10', 'r0', 'v1_'] = gv['A11', 'r1', 'v1_'] = True
+        for i in range(2):
+            for j in range(2):
+                gv[f'd{i}', f'd{j}', f'A{i}{j}'] = True
         return gv
+
+    def gv(self, nu, nd, n):
+        return (nu, nd, n) in self.__gv.keys()
 
     @staticmethod
     def __create_g():
         g = dict()
         for i in range(2):
-            g[f'r{i}'] = i
-            g[f'd{i}'] = i
+            g[i, f'r{i}'] = True
+            g[i, f'd{i}'] = True
         return g
+
+    def g(self, t, n):
+        return (t, n) in self.__g.keys()
+
+
