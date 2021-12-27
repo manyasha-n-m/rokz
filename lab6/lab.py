@@ -94,7 +94,7 @@ class BinSum:
         f = dict()
         for i in range(3):
             for j in range(self.cols):
-                for i_ in range(i_, 3):
+                for i_ in range(i, 3):
                     for j_ in range(j, self.cols):
                         for t in self.T:
                             f[i, i_, j, j_, t] = self.q(t, self.block(i, i_, j, j_))
