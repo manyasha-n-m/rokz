@@ -45,7 +45,7 @@ class BinSum:
 
     @staticmethod
     def __create_n():
-        N = ['i', 'i_', '']
+        N = ['i', 'i_']
         for i in range(2):
             N.extend([f'v{i}', f'v{i}_', f'r{i}', f'd{i}'])
             for j in range(2):
@@ -55,8 +55,10 @@ class BinSum:
     @staticmethod
     def __create_gh():
         gh = dict()
-        gh['i', 'v0', 'i'] = gh['i_', 'v0_', 'i'] = gh['', 'v0', 'i'] = gh['', 'v0_', 'i'] = True
-        gh['i', 'v1', 'i_'] = gh['i_', 'v1_', 'i_'] = gh['', 'v1', 'i_'] = gh['', 'v1_', 'i_'] = True
+        gh['i', 'v0', 'i'] = gh['i_', 'v0_', 'i'] = True
+        gh['i', 'v1', 'i_'] = gh['i_', 'v1_', 'i_'] = True
+        gh['v0', 'v0', 'i'] = gh['v0_', 'v0', 'i'] =gh['v1', 'v0_', 'i'] = gh['v1_', 'v0_', 'i'] = True
+        gh['v0', 'v1', 'i_'] = gh['v0_', 'v1', 'i_'] =gh['v1', 'v1_', 'i_'] = gh['v1_', 'v1_', 'i_'] = True
         return gh
 
     def gh(self, nl, nr, n):
@@ -140,10 +142,10 @@ class BinSum:
         return any(res)
 
     def iter_S1(self):
-        for i in range(2):
+        for i in range(3):
             for j in range(self.cols):
                 for n in self.N:
-                    self.f[i, i, j, j, n] = self.f[i, i, j, j, n] or self.rename(i, i, j, j, n)
+                    self.f[i, i, j, j, n] = any([self.f[i, i, j, j, n], self.rename(i, i, j, j, n)])
 
     def iter_S2(self):
         i, i_ = 0, 1
