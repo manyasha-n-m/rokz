@@ -1,10 +1,11 @@
 import numpy as np
+import matplotlib.pyplot as plt
 import cv2
 from glob import glob
 
-img_ = "**/sample_0.png"
-e0_ = "**/e0.png"
-e1_ = "**/e1.png"
+img_ = glob("**/sample_0.png", recursive=True)[0]
+e0_ = glob("**/e0.png", recursive=True)[0]
+e1_ = glob("**/e1.png", recursive=True)[0]
 
 
 class BinSum:
@@ -20,9 +21,9 @@ class BinSum:
     True
     """
     def __init__(self, img_path, e0_path, e1_path):
-        self.img = cv2.imread(glob(img_path, recursive=True)[0], cv2.IMREAD_GRAYSCALE)
-        self.e0 = cv2.imread(glob(e0_path, recursive=True)[0], cv2.IMREAD_GRAYSCALE)
-        self.e1 = cv2.imread(glob(e1_path, recursive=True)[0], cv2.IMREAD_GRAYSCALE)
+        self.img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
+        self.e0 = cv2.imread(e0_path, cv2.IMREAD_GRAYSCALE)
+        self.e1 = cv2.imread(e1_path, cv2.IMREAD_GRAYSCALE)
         self.h, self.w = self.e0.shape
         self.cols = int(len(self.img[0, :])/self.w)
         self.T =[0, 1]
@@ -34,7 +35,6 @@ class BinSum:
         self.f = self.calc_f0()
 
     def img_show(self):
-        import matplotlib.pyplot as plt
         plt.imshow(self.img)
         return plt.show()
 

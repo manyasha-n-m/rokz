@@ -23,7 +23,7 @@ def main():
         _base = np.random.randint(0, 2, (3, int(i/10)))
         for j in range(0, 30, 10):
             _im[j:j+10, :] = e_row(e,_base[int(j/10), :])
-        cv2.imwrite(f'samples/sample_{i}.png', _im, )
+        cv2.imwrite(f'samples/sample_{i+1}.png', _im, )
 
     # real sample
     im = np.zeros((30, 40), dtype=int)
