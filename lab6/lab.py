@@ -1,5 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
 import cv2
 from glob import glob
 
@@ -35,6 +34,7 @@ class BinSum:
         self.f = self.calc_f0()
 
     def img_show(self):
+        import matplotlib.pyplot as plt
         plt.imshow(self.img)
         return plt.show()
 
