@@ -178,11 +178,9 @@ class BinSum:
 
     def belongs(self):
         f = self.check()
-        for n in self.N:
-            if f[0,2,0,self.cols-1, n]:
-                for n_ in self.N:
-                    if f[0,2,0,0,n_]:
-                        return print('Belongs:', n_)
-
+        if f[0, 2, 0, self.cols-1, 'i']:
+            for n_ in self.N:
+                if f[0, 2, 0, 0, n_]:
+                    return print('Belongs:', n_)
         return print('Doesn`t belong!')
 
