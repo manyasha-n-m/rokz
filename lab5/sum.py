@@ -1,5 +1,5 @@
 import time
-st = time.time()
+# st = time.time()
 import numpy as np
 import cv2
 
@@ -78,11 +78,11 @@ class Union:
         return np.take_along_axis(self.g[:, :, :,j], K[None, None, :], axis=0)[0]
 
 
-im, m = read(im_path, mask_path)
-u = Union(im, m, 255)
-res = u.merge()
-cv2.imwrite('24.png', res)
-print(time.time()-st)
+# im, m = read(im_path, mask_path)
+# u = Union(im, m, 255)
+# res = u.merge()
+# cv2.imwrite('result.png', res)
+# print(time.time()-st)
 
 if __name__ == "__main__":
     import doctest
